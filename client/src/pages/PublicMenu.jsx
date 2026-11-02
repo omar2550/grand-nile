@@ -9,7 +9,7 @@ export default function PublicMenu() {
   const room = sp.get('room'), table = sp.get('table'), outlet = sp.get('outlet') === 'rooftop' ? 'rooftop' : 'room';
   const [d, setD] = useState(null); const [err, setErr] = useState(''); const [cat, setCat] = useState('All'); const [cart, setCart] = useState({});
   const [name, setName] = useState(''); const [note, setNote] = useState(''); const [sent, setSent] = useState(null); const [busy, setBusy] = useState(false);
-  useEffect(() => { fetch(`/api/public/${slug}/menu?outlet=${outlet}`).then((r) => r.json()).then((x) => (x.error ? setErr(x.error) : setD(x))).catch(() => setErr('Could not load the menu')); }, [slug, outlet]);
+  useEffect(() => { fetch(`${import.meta.env.VITE_BACKEND_URL}/api/public/${slug}/menu?outlet=${outlet}`).then((r) => r.json()).then((x) => (x.error ? setErr(x.error) : setD(x))).catch(() => setErr('Could not load the menu')); }, [slug, outlet]);
   const cats = useMemo(() => ['All', ...new Set((d?.items || []).map((i) => i.category))], [d]);
   const canOrder = !!(room || table);
   const lines = (d?.items || []).filter((i) => cart[i._id]); const total = lines.reduce((s, i) => s + i.price * cart[i._id], 0);
@@ -17,7 +17,7 @@ export default function PublicMenu() {
   const send = async () => {
     setBusy(true); setErr('');
     try {
-      const r = await fetch(`/api/public/${slug}/order`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ room, table, guestName: name, note, items: lines.map((i) => ({ menuId: i._id, qty: cart[i._id] })) }) });
+      const r = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/public/${slug}/order`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ room, table, guestName: name, note, items: lines.map((i) => ({ menuId: i._id, qty: cart[i._id] })) }) });
       const x = await r.json(); if (!r.ok) throw new Error(x.error); setSent(x.orderNo); setCart({});
     } catch (e) { setErr(e.message); } setBusy(false);
   };
