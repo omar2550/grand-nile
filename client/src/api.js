@@ -2,7 +2,7 @@ export const getToken = () => localStorage.getItem('gn_token');
 const headers = () => ({ 'Content-Type': 'application/json', Authorization: `Bearer ${getToken() || ''}`, 'x-hotel': localStorage.getItem('gn_hotel') || '' });
 
 export async function api(path, { method = 'GET', body } = {}) {
-  const res = await fetch('/api' + path, { method, headers: headers(), body: body ? JSON.stringify(body) : undefined });
+  const res = await fetch(`${import.meta.env.BACKEND_URL}/api` + path, { method, headers: headers(), body: body ? JSON.stringify(body) : undefined });
   const data = await res.json().catch(() => ({}));
   if (res.status === 401 && path !== '/auth/login') { localStorage.removeItem('gn_token'); location.reload(); }
   if (!res.ok) throw new Error(data.error || 'Something went wrong');
