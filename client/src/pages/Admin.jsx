@@ -61,7 +61,7 @@ export default function Admin({ user }) {
     }
   };
   const download = async (name) => {
-    const r = await fetch("/api/admin/backups/" + name, {
+    const r = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/admin/backups/` + name, {
       headers: { Authorization: "Bearer " + getToken() },
     });
     const a = document.createElement("a");
