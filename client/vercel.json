@@ -2,9 +2,9 @@
     "version": 2,
     "builds": [
       {
-        "src": "public/index.html",
+        "src": "package.json",
         "use": "@vercel/static-build",
-        "config": { "distDir": "public"}
+        "config": { "distDir": "dist"}
       }
     ],
     "rewrites": [
