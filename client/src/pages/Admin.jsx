@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { api, getToken } from "../api.js";
 import { Err, Head, HotelCtx, Pill, Tabs, money } from "../ui.jsx";
+import { tr, tm, rich, locale } from '../i18n.js';
 
 const ROLES = [
-  ["owner", "Owner (all hotels)"],
-  ["admin", "Hotel administrator"],
-  ["manager", "General manager"],
-  ["front_desk", "Reception"],
-  ["cashier", "Restaurant cashier"],
-  ["accountant", "Accountant"],
-  ["storekeeper", "Storekeeper"],
+  ["owner", tr("Owner (all hotels)")],
+  ["admin", tr("Hotel administrator")],
+  ["manager", tr("General manager")],
+  ["front_desk", tr("Reception")],
+  ["cashier", tr("Restaurant cashier")],
+  ["accountant", tr("Accountant")],
+  ["storekeeper", tr("Storekeeper")],
 ];
 
 export default function Admin({ user }) {
@@ -72,17 +73,17 @@ export default function Admin({ user }) {
   const toggle = (arr, v) =>
     arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
   const tabs = [
-    ["users", "Users & job roles"],
-    ["rooms", "Rooms & prices"],
-    ["menu", "Menu & prices"],
-    ["audit", "Activity log"],
-    ["backup", "Backups"],
+    ["users", tr("Users & job roles")],
+    ["rooms", tr("Rooms & prices")],
+    ["menu", tr("Menu & prices")],
+    ["audit", tr("Activity log")],
+    ["backup", tr("Backups")],
   ];
   return (
     <>
       <Head
-        title="Users & settings"
-        sub="Who can do what, your prices, and your safety copies"
+        title={tr("Users & settings")}
+        sub={tr("Who can do what, your prices, and your safety copies")}
       />
       <Tabs
         tab={tab}
@@ -101,9 +102,9 @@ export default function Admin({ user }) {
             <table>
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Job role</th>
-                  <th>Can sign in</th>
+                  <th>{tr("Name")}</th>
+                  <th>{tr("Job role")}</th>
+                  <th>{tr("Can sign in")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -156,33 +157,39 @@ export default function Admin({ user }) {
             </table>
           </div>
           <div className="card">
-            <h3>Add a user</h3>
+            <h3>{tr("Add a user")}</h3>
             <p className="help" style={{ marginTop: 8 }}>
-              <b>Reception</b>: bookings & guest bills <br /> 
-              <b>Cashier</b>: restaurant & rooftop <br /> 
-              <b>Accountant</b>: accounts, cash, stock <br />
-              <b>Storekeeper</b>: stock only <br />
-              <b>Manager</b>: everything except settings <br />
-              <b>Administrator</b>: everything for their hotel. <br />
-              <i>There is no limit on the number of users.</i>
+              {[
+                ["Reception", "bookings & guest bills"],
+                ["Cashier", "restaurant & rooftop"],
+                ["Accountant", "accounts, cash, stock"],
+                ["Storekeeper", "stock only"],
+                ["Manager", "everything except settings"],
+                ["Administrator", "everything for their hotel."],
+              ].map(([role, what]) => (
+                <React.Fragment key={role}>
+                  <b>{tr(role)}</b>: {tr(what)} <br />
+                </React.Fragment>
+              ))}
+              <i>{tr("There is no limit on the number of users.")}</i>
             </p>
             <div className="grid">
               <label>
-                Name
+                {tr("Name")}
                 <input
                   value={nu.name}
                   onChange={(e) => setNu({ ...nu, name: e.target.value })}
                 />
               </label>
               <label>
-                Email (used to sign in)
+                {tr("Email (used to sign in)")}
                 <input
                   value={nu.email}
                   onChange={(e) => setNu({ ...nu, email: e.target.value })}
                 />
               </label>
               <label>
-                Job role
+                {tr("Job role")}
                 <select
                   value={nu.role}
                   onChange={(e) => setNu({ ...nu, role: e.target.value })}
@@ -197,7 +204,7 @@ export default function Admin({ user }) {
                 </select>
               </label>
               <label>
-                Password (at least 6 characters)
+                {tr("Password (at least 6 characters)")}
                 <input
                   type="password"
                   value={nu.password}
@@ -210,11 +217,11 @@ export default function Admin({ user }) {
                 onClick={() =>
                   run(
                     () => api("/admin/users", { method: "POST", body: nu }),
-                    "User created.",
+                    tr("User created."),
                   )
                 }
               >
-                Create user
+                {tr("Create user")}
               </button>
             </div>
           </div>
@@ -226,9 +233,9 @@ export default function Admin({ user }) {
             <table>
               <thead>
                 <tr>
-                  <th>Room</th>
-                  <th>Type</th>
-                  <th>Price per night (EGP)</th>
+                  <th>{tr("Room")}</th>
+                  <th>{tr("Type")}</th>
+                  <th>{tr("Price per night (EGP)")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -237,7 +244,7 @@ export default function Admin({ user }) {
                     <td>
                       <b>{r.number}</b>
                     </td>
-                    <td>{r.type}</td>
+                    <td>{tr(r.type)}</td>
                     <td>
                       <input
                         type="number"
@@ -251,7 +258,7 @@ export default function Admin({ user }) {
                                 method: "PATCH",
                                 body: { rate: e.target.value },
                               }),
-                            `Room ${r.number} price saved.`,
+                            tr("Room {n} price saved.", { n: r.number }),
                           )
                         }
                       />
@@ -262,17 +269,17 @@ export default function Admin({ user }) {
             </table>
           </div>
           <div className="card">
-            <h3>Add a room</h3>
+            <h3>{tr("Add a room")}</h3>
             <div className="grid" style={{ marginTop: 10 }}>
               <label>
-                Room number
+                {tr("Room number")}
                 <input
                   value={nr.number}
                   onChange={(e) => setNr({ ...nr, number: e.target.value })}
                 />
               </label>
               <label>
-                Type
+                {tr("Type")}
                 <select
                   value={nr.type}
                   onChange={(e) => setNr({ ...nr, type: e.target.value })}
@@ -283,12 +290,12 @@ export default function Admin({ user }) {
                     "Family Suite",
                     "Royal Suite",
                   ].map((t) => (
-                    <option key={t}>{t}</option>
+                    <option key={t} value={t}>{tr(t)}</option>
                   ))}
                 </select>
               </label>
               <label>
-                Price per night (EGP)
+                {tr("Price per night (EGP)")}
                 <input
                   type="number"
                   value={nr.rate}
@@ -301,11 +308,11 @@ export default function Admin({ user }) {
                 onClick={() =>
                   run(
                     () => api("/rooms", { method: "POST", body: nr }),
-                    "Room added.",
+                    tr("Room added."),
                   )
                 }
               >
-                Add room
+                {tr("Add room")}
               </button>
             </div>
           </div>
@@ -317,25 +324,25 @@ export default function Admin({ user }) {
             <table>
               <thead>
                 <tr>
-                  <th>Item</th>
-                  <th>Sold in</th>
-                  <th>Price (EGP)</th>
-                  <th>On the menu</th>
+                  <th>{tr("Item")}</th>
+                  <th>{tr("Sold in")}</th>
+                  <th>{tr("Price (EGP)")}</th>
+                  <th>{tr("On the menu")}</th>
                 </tr>
               </thead>
               <tbody>
                 {menu.map((m) => (
                   <tr key={m._id}>
                     <td>
-                      {m.emoji} {m.name}
+                      {m.emoji} {tr(m.name)}
                       <br />
-                      <small>{m.category}</small>
+                      <small>{tr(m.category)}</small>
                     </td>
                     <td>
                       <small>
                         {m.outlets
-                          .map((o) => (o === "room" ? "room service" : o))
-                          .join(", ")}
+                          .map((o) => tr(o === "room" ? "room service" : o))
+                          .join(tr(", "))}
                       </small>
                     </td>
                     <td>
@@ -351,7 +358,7 @@ export default function Admin({ user }) {
                                 method: "PATCH",
                                 body: { price: e.target.value },
                               }),
-                            `${m.name} price saved.`,
+                            tr("{name} price saved.", { name: tr(m.name) }),
                           )
                         }
                       />
@@ -377,24 +384,24 @@ export default function Admin({ user }) {
             </table>
           </div>
           <div className="card">
-            <h3>Add a menu item</h3>
+            <h3>{tr("Add a menu item")}</h3>
             <div className="grid" style={{ marginTop: 10 }}>
               <label>
-                Name
+                {tr("Name")}
                 <input
                   value={nm.name}
                   onChange={(e) => setNm({ ...nm, name: e.target.value })}
                 />
               </label>
               <label>
-                Group (Drinks, Mains…)
+                {tr("Group (Drinks, Mains…)")}
                 <input
                   value={nm.category}
                   onChange={(e) => setNm({ ...nm, category: e.target.value })}
                 />
               </label>
               <label>
-                Price (EGP, before tax)
+                {tr("Price (EGP, before tax)")}
                 <input
                   type="number"
                   value={nm.price}
@@ -402,18 +409,18 @@ export default function Admin({ user }) {
                 />
               </label>
               <label>
-                Emoji
+                {tr("Emoji")}
                 <input
                   value={nm.emoji}
                   onChange={(e) => setNm({ ...nm, emoji: e.target.value })}
                 />
               </label>
               <div>
-                <small>Sold in</small>
+                <small>{tr("Sold in")}</small>
                 {[
-                  ["restaurant", "Restaurant"],
-                  ["rooftop", "Rooftop"],
-                  ["room", "Room service (QR in rooms)"],
+                  ["restaurant", tr("Restaurant")],
+                  ["rooftop", tr("Rooftop")],
+                  ["room", tr("Room service (QR in rooms)")],
                 ].map(([o, l]) => (
                   <label
                     key={o}
@@ -437,11 +444,11 @@ export default function Admin({ user }) {
                 onClick={() =>
                   run(
                     () => api("/menu", { method: "POST", body: nm }),
-                    "Menu item added.",
+                    tr("Menu item added."),
                   )
                 }
               >
-                Add item
+                {tr("Add item")}
               </button>
             </div>
           </div>
@@ -450,31 +457,29 @@ export default function Admin({ user }) {
       {tab === "audit" && (
         <div className="card scroll-x">
           <p className="help">
-            Every important action is saved here with who did it and when.
-            Cancelled items, manual entries and refused page attempts are
-            highlighted.
+            {tr("Every important action is saved here with who did it and when. Cancelled items, manual entries and refused page attempts are highlighted.")}
           </p>
           <table>
             <thead>
               <tr>
-                <th>When</th>
-                <th>Who</th>
-                <th>What</th>
-                <th>Details</th>
+                <th>{tr("When")}</th>
+                <th>{tr("Who")}</th>
+                <th>{tr("What")}</th>
+                <th>{tr("Details")}</th>
                 <th />
               </tr>
             </thead>
             <tbody>
               {audit.map((a) => (
                 <tr key={a._id}>
-                  <td>{new Date(a.createdAt).toLocaleString("en-GB")}</td>
+                  <td>{new Date(a.createdAt).toLocaleString(locale)}</td>
                   <td>
                     {a.user}
                     <br />
-                    <small>{a.role}</small>
+                    <small>{(ROLES.find(([r]) => r === a.role) || [])[1] || a.role}</small>
                   </td>
-                  <td>{a.action}</td>
-                  <td>{a.detail}</td>
+                  <td>{tm(a.action)}</td>
+                  <td>{tm(a.detail)}</td>
                   <td>{a.severity !== "info" && <Pill s={a.severity} />}</td>
                 </tr>
               ))}
@@ -486,30 +491,26 @@ export default function Admin({ user }) {
         <div className="card">
           <div className="row" style={{ marginBottom: 12 }}>
             <p style={{ margin: 0 }}>
-              A full copy of <b>all hotels</b> is saved every night at 03:00 in
-              the <code>server/backups</code> folder (the last 30 are kept).
-              Copy that folder to another disk or computer regularly. To restore
-              a copy, run <code>npm run restore -- backups/FILE.json</code> in
-              the server folder.
+              {rich("A full copy of <b>all hotels</b> is saved every night at 03:00 in the <code>server/backups</code> folder (the last 30 are kept). Copy that folder to another disk or computer regularly. To restore a copy, run <code>npm run restore -- backups/FILE.json</code> in the server folder.")}
             </p>
             <button
               className="btn gold"
               onClick={() =>
                 run(
                   () => api("/admin/backups", { method: "POST" }),
-                  "Backup saved.",
+                  tr("Backup saved."),
                 )
               }
             >
-              Make a backup now
+              {tr("Make a backup now")}
             </button>
           </div>
           <table>
             <thead>
               <tr>
-                <th>File</th>
-                <th className="n">Size</th>
-                <th>Made on</th>
+                <th>{tr("File")}</th>
+                <th className="n">{tr("Size")}</th>
+                <th>{tr("Made on")}</th>
                 <th />
               </tr>
             </thead>
@@ -517,14 +518,14 @@ export default function Admin({ user }) {
               {backups.map((b) => (
                 <tr key={b.name}>
                   <td>{b.name}</td>
-                  <td className="n">{b.sizeKB} KB</td>
-                  <td>{new Date(b.at).toLocaleString("en-GB")}</td>
+                  <td className="n">{b.sizeKB} {tr("KB")}</td>
+                  <td>{new Date(b.at).toLocaleString(locale)}</td>
                   <td>
                     <button
                       className="btn ghost sm"
                       onClick={() => download(b.name)}
                     >
-                      Download
+                      {tr("Download")}
                     </button>
                   </td>
                 </tr>

@@ -71,7 +71,7 @@ const MENU = [
   ['Apple Shisha', 'Rooftop extras', 180, '💨', ['rooftop'], [], 'Served with fresh coal'],
 ];
 const HOTELS = [
-  { name: 'Grand Nile Hotel', code: 'NIL', slug: 'grand-nile', city: 'Cairo', view: 'Nile', rates: [2400, 2800, 4300, 6400, 14500], ooo: '105', airport: ['Hotel → Cairo Airport (CAI)', 650, 380], tours: [['Pyramids & Sphinx day trip', 'Giza', 950, 520], ['Egyptian Museum & Khan el-Khalili', 'Cairo', 700, 380], ['Alexandria day trip', 'Alexandria', 1200, 700], ['Nile felucca sunset', 'Cairo', 350, 180], ['Saqqara & Memphis half day', 'Saqqara', 650, 340]] },
+  { name: 'Henu Hotel', code: 'NIL', slug: 'henu', city: 'Cairo', view: 'Nile', rates: [2400, 2800, 4300, 6400, 14500], ooo: '105', airport: ['Hotel → Cairo Airport (CAI)', 650, 380], tours: [['Pyramids & Sphinx day trip', 'Giza', 950, 520], ['Egyptian Museum & Khan el-Khalili', 'Cairo', 700, 380], ['Alexandria day trip', 'Alexandria', 1200, 700], ['Nile felucca sunset', 'Cairo', 350, 180], ['Saqqara & Memphis half day', 'Saqqara', 650, 340]] },
   { name: 'Red Sea Pearl Resort', code: 'RSP', slug: 'red-sea-pearl', city: 'Hurghada', view: 'Sea', rates: [2600, 3200, 4800, 7000, 15500], ooo: '208', airport: ['Hotel → Hurghada Airport (HRG)', 350, 200], tours: [['Giftun Island boat trip', 'Giftun', 900, 520], ['Snorkeling at Orange Bay', 'Hurghada', 800, 450], ['Desert safari & Bedouin dinner', 'Hurghada desert', 650, 360], ['Luxor day trip', 'Luxor', 1800, 1100], ['Dolphin House cruise', 'Hurghada', 750, 430]] },
 ];
 const COMPANIES = ['Pharaoh Tours', 'Nile Explorer Travel', 'Red Sea Adventures', 'Sphinx Transport'];

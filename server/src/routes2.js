@@ -47,7 +47,7 @@ const NEED = { journal: ['accounting'], 'trial-balance': ['accounting'], income:
 api.get('/export/:kind', wrap(async (req, res) => {
   const need = NEED[req.params.kind]; if (!need) throw new Error('Unknown report');
   if (!need.some((m) => MODULES[req.user.role]?.includes(m))) return res.status(403).json({ error: 'Your job role cannot download this report' });
-  const { wb, filename } = await buildExport(req.params.kind, req.hotel, req.query);
+  const { wb, filename } = await buildExport(req.params.kind, req.hotel, req.query, req.get('x-lang') === 'ar' ? 'ar' : 'en');
   await audit(req, 'Excel report downloaded', filename);
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
   res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);

@@ -17,6 +17,12 @@ React + Node.js + MongoDB. Opens in any normal browser, on as many devices at th
 
 Egypt taxes are built in: **12% service charge + 14% VAT** (on price + service), kept in separate accounts.
 
+## Languages: English and Arabic (العربية)
+Use the **English | العربية** switch at the top of the sign-in page, at the bottom of the side menu, and on the guests' QR menu. The page reloads in the chosen language, with full right-to-left layout, Arabic Excel reports (sheets also open right-to-left) and an Arabic printed invoice. The choice is remembered per browser. Guests who scan a QR code get Arabic automatically if their phone is set to Arabic.
+- All Arabic text lives in `client/src/ar.js` (English text = key). `server/src/ar.js` is an identical copy used for Excel files: **edit both together**.
+- Names you type yourself (guests, new menu items, suppliers) are shown exactly as typed. The demo data (menu, stock, account names…) has Arabic names built in.
+- To add a phrase: wrap it as `tr('English text')` in the code and add its Arabic line to `ar.js`.
+
 ## Start it (Windows or any computer)
 Needs Node 18+ and a MongoDB database (local, or MongoDB Atlas).
 1. Put your database address in `server/.env` → `MONGO_URI=...` (database name at the end, e.g. `/hotel_suite`).

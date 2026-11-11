@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { api, addDays, today } from "../api.js";
 import { Err, ExportBtn, Head, Range, Tabs, money, SOURCE } from "../ui.jsx";
+import { tr, tm } from '../i18n.js';
 
 export default function Accounting() {
   const [tab, setTab] = useState("journal");
@@ -58,8 +59,8 @@ export default function Accounting() {
   return (
     <>
       <Head
-        title="Accounts & reports"
-        sub="The hotel's books. Everything done in the hotel is recorded here automatically."
+        title={tr("Accounts & reports")}
+        sub={tr("The hotel's books. Everything done in the hotel is recorded here automatically.")}
       >
         {tab !== "coa" && tab !== "manual" && (
           <Range from={from} to={to} setFrom={setFrom} setTo={setTo} />
@@ -70,23 +71,23 @@ export default function Accounting() {
         tab={tab}
         setTab={setTab}
         tabs={[
-          ["journal", "Daily entries (journal)"],
-          ["tb", "Trial balance"],
-          ["pl", "Profit & loss"],
-          ["bs", "Balance sheet"],
-          ["manual", "Add a manual entry"],
+          ["journal", tr("Daily entries (journal)")],
+          ["tb", tr("Trial balance")],
+          ["pl", tr("Profit & loss")],
+          ["bs", tr("Balance sheet")],
+          ["manual", tr("Add a manual entry")],
         ]}
       />
       <p className="help">
         {
           {
             journal:
-              "Every money event of the day, written as a debit and a credit that are always equal.",
-            tb: "The total debit and credit of every account. The two totals must be equal.",
-            pl: "Income minus costs and expenses for the period = profit.",
-            bs: "What the hotel owns, what it owes, and the owners’ money, on the last date.",
+              tr("Every money event of the day, written as a debit and a credit that are always equal."),
+            tb: tr("The total debit and credit of every account. The two totals must be equal."),
+            pl: tr("Income minus costs and expenses for the period = profit."),
+            bs: tr("What the hotel owns, what it owes, and the owners’ money, on the last date."),
             manual:
-              "For corrections only. Debit and credit must be equal. This is recorded in the activity log.",
+              tr("For corrections only. Debit and credit must be equal. This is recorded in the activity log."),
           }[tab]
         }
       </p>
@@ -97,21 +98,20 @@ export default function Accounting() {
           <table>
             <thead>
               <tr>
-                <th>No.</th>
-                <th>Day</th>
-                <th>What happened</th>
-                <th>From</th>
-                <th>Accounts used</th>
-                <th className="n">Amount</th>
+                <th>{tr("No.")}</th>
+                <th>{tr("Day")}</th>
+                <th>{tr("What happened")}</th>
+                <th>{tr("From@@source")}</th>
+                <th>{tr("Entered by")}</th>
+                <th className="n">{tr("Amount")}</th>
               </tr>
             </thead>
             <tbody>
-              {console.log(data)}
               {data.map((j) => (
                 <tr key={j._id}>
                   <td>#{j.no}</td>
                   <td>{j.date}</td>
-                  <td>{j.memo}</td>
+                  <td>{tm(j.memo)}</td>
                   <td>
                     <span className="pill">{SOURCE[j.source] || j.source}</span>
                   </td>
@@ -127,7 +127,7 @@ export default function Accounting() {
               ))}
               {!data.length && (
                 <tr>
-                  <td colSpan="6">No entries in this period.</td>
+                  <td colSpan="6">{tr("No entries in this period.")}</td>
                 </tr>
               )}
             </tbody>
@@ -139,17 +139,17 @@ export default function Accounting() {
           <table>
             <thead>
               <tr>
-                <th>Account</th>
-                <th className="n">Debit</th>
-                <th className="n">Credit</th>
-                <th className="n">Balance</th>
+                <th>{tr("Account")}</th>
+                <th className="n">{tr("Debit")}</th>
+                <th className="n">{tr("Credit")}</th>
+                <th className="n">{tr("Balance")}</th>
               </tr>
             </thead>
             <tbody>
               {tbd.map((r) => (
                 <tr key={r.code}>
                   <td>
-                    {r.code} · {r.name}
+                    {r.code} · {tr(r.name)}
                   </td>
                   <td className="n">{money(r.debit)}</td>
                   <td className="n">{money(r.credit)}</td>
@@ -158,7 +158,7 @@ export default function Accounting() {
               ))}
               {tbd.length > 0 && (
                 <tr className="total">
-                  <td>Totals</td>
+                  <td>{tr("Totals")}</td>
                   <td className="n">
                     {money(tbd.reduce((s, r) => s + r.debit, 0))}
                   </td>
@@ -178,47 +178,47 @@ export default function Accounting() {
             <tbody>
               <tr>
                 <td colSpan="2">
-                  <b>Income</b>
+                  <b>{tr("Income")}</b>
                 </td>
               </tr>
               {data.revenue.map((r) => (
                 <tr key={r.code}>
-                  <td>{r.name}</td>
+                  <td>{tr(r.name)}</td>
                   <td className="n">{money(r.balance)}</td>
                 </tr>
               ))}
               <tr className="total">
-                <td>Total income</td>
+                <td>{tr("Total income")}</td>
                 <td className="n">{money(data.totalRevenue)}</td>
               </tr>
               <tr>
                 <td colSpan="2">
-                  <b>Direct costs</b>
+                  <b>{tr("Direct costs")}</b>
                 </td>
               </tr>
               {data.costs.map((r) => (
                 <tr key={r.code}>
-                  <td>{r.name}</td>
+                  <td>{tr(r.name)}</td>
                   <td className="n">({money(r.balance)})</td>
                 </tr>
               ))}
               <tr className="total">
-                <td>Gross profit</td>
+                <td>{tr("Gross profit")}</td>
                 <td className="n">{money(data.grossProfit)}</td>
               </tr>
               <tr>
                 <td colSpan="2">
-                  <b>Running expenses</b>
+                  <b>{tr("Running expenses")}</b>
                 </td>
               </tr>
               {data.opex.map((r) => (
                 <tr key={r.code}>
-                  <td>{r.name}</td>
+                  <td>{tr(r.name)}</td>
                   <td className="n">({money(r.balance)})</td>
                 </tr>
               ))}
               <tr className="total">
-                <td>Net profit</td>
+                <td>{tr("Net profit")}</td>
                 <td className={"n " + (data.netIncome < 0 ? "neg" : "pos-c")}>
                   {money(data.netIncome)}
                 </td>
@@ -234,17 +234,17 @@ export default function Accounting() {
               <tbody>
                 <tr>
                   <td colSpan="2">
-                    <b>What the hotel owns</b>
+                    <b>{tr("What the hotel owns")}</b>
                   </td>
                 </tr>
                 {data.assets.map((r) => (
                   <tr key={r.code}>
-                    <td>{r.name}</td>
+                    <td>{tr(r.name)}</td>
                     <td className="n">{money(r.balance)}</td>
                   </tr>
                 ))}
                 <tr className="total">
-                  <td>Total owned</td>
+                  <td>{tr("Total owned")}</td>
                   <td className="n">{money(data.totalAssets)}</td>
                 </tr>
               </tbody>
@@ -255,32 +255,32 @@ export default function Accounting() {
               <tbody>
                 <tr>
                   <td colSpan="2">
-                    <b>What the hotel owes</b>
+                    <b>{tr("What the hotel owes")}</b>
                   </td>
                 </tr>
                 {data.liabilities.map((r) => (
                   <tr key={r.code}>
-                    <td>{r.name}</td>
+                    <td>{tr(r.name)}</td>
                     <td className="n">{money(r.balance)}</td>
                   </tr>
                 ))}
                 <tr>
                   <td colSpan="2">
-                    <b>Owners’ money</b>
+                    <b>{tr("Owners’ money")}</b>
                   </td>
                 </tr>
                 {data.equity.map((r) => (
                   <tr key={r.code}>
-                    <td>{r.name}</td>
+                    <td>{tr(r.name)}</td>
                     <td className="n">{money(r.balance)}</td>
                   </tr>
                 ))}
                 <tr>
-                  <td>Profit so far</td>
+                  <td>{tr("Profit so far")}</td>
                   <td className="n">{money(data.currentEarnings)}</td>
                 </tr>
                 <tr className="total">
-                  <td>Total owed + owners’ money</td>
+                  <td>{tr("Total owed + owners’ money")}</td>
                   <td className="n">
                     {money(data.totalLiabilities + data.totalEquity)}
                   </td>
@@ -295,14 +295,14 @@ export default function Accounting() {
           <div className="grid">
             <div className="row">
               <label>
-                What is this for?
+                {tr("What is this for?")}
                 <input
                   value={je.memo}
                   onChange={(e) => setJe({ ...je, memo: e.target.value })}
                 />
               </label>
               <label>
-                Date
+                {tr("Date")}
                 <input
                   type="date"
                   value={je.date}
@@ -313,21 +313,21 @@ export default function Accounting() {
             {je.lines.map((l, i) => (
               <div className="row" key={i}>
                 <label>
-                  Account
+                  {tr("Account")}
                   <select
                     value={l.code}
                     onChange={(e) => setLine(i, "code", e.target.value)}
                   >
-                    <option value="">Choose…</option>
+                    <option value="">{tr("Choose…")}</option>
                     {postable.map((a) => (
                       <option key={a.code} value={a.code}>
-                        {a.code} · {a.name}
+                        {a.code} · {tr(a.name)}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label>
-                  Debit
+                  {tr("Debit")}
                   <input
                     type="number"
                     value={l.debit}
@@ -335,7 +335,7 @@ export default function Accounting() {
                   />
                 </label>
                 <label>
-                  Credit
+                  {tr("Credit")}
                   <input
                     type="number"
                     value={l.credit}
@@ -354,12 +354,12 @@ export default function Accounting() {
                   })
                 }
               >
-                Add a line
+                {tr("Add a line")}
               </button>
               <span className="pill" style={{ flex: "none" }}>
                 {drs === crs && drs > 0
-                  ? "Balanced"
-                  : `Difference ${(drs - crs).toFixed(2)}`}
+                  ? tr("Balanced")
+                  : tr("Difference {n}", { n: (drs - crs).toFixed(2) })}
               </span>
             </div>
             <button
@@ -375,7 +375,7 @@ export default function Accounting() {
                 setOk("");
                 try {
                   await api("/journal", { method: "POST", body: je });
-                  setOk("Entry saved.");
+                  setOk(tr("Entry saved."));
                   setJe({
                     ...je,
                     memo: "",
@@ -390,7 +390,7 @@ export default function Accounting() {
                 }
               }}
             >
-              Save entry
+              {tr("Save entry")}
             </button>
           </div>
         </div>
